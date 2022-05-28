@@ -1,0 +1,4 @@
+1: mas cantidad de cursos que de aulas
+2: Mas cantidad de cursos que de profesores
+3: Mas Cursos que bloques
+4: No hay suficientes soluciones
