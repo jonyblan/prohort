@@ -29,3 +29,18 @@ Lista de todos los arrays de tablas:
         orientaciones
         materias
         profesorxMaterias
+
+Convertir de un Int a un array de binario:
+    a = 29877490
+    aBin = bin(a)
+    aBien = []
+    for i in range(2, len(aBin)):
+        aBien.append(aBin[i])
+
+Convertir de un array de binario a un Int
+    decimal = 0
+    for i in range(0, len(aBien)):
+        decimal = decimal * 2
+        if(aBien[i] == "1" or aBien[i] == 1):
+            decimal = decimal + 1
+    print(decimal)
