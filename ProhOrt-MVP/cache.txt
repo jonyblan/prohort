@@ -1,0 +1,19 @@
+def codigo():
+    abc = 0
+    for numBloque in range (1, cantBloques):
+        for i in range(cantCursos):
+            if(checkearDisponibilidad(cursos[i].Disponibilidad, numBloque, 2)):
+                for a in range(cantProfesores):
+                    if(checkearDisponibilidad(profesores[a].Disponibilidad, numBloque, 3)):
+                        for b in range(cantAulas):
+                            if(checkearDisponibilidad(aulas[b].Disponibilidad, numBloque, 4)):
+                                nuevoResultado = [numBloque, i, a, b]
+                                resultados.append(nuevoResultado)
+                                mostrarResultados(numBloque, i, a, b)
+                                anotarClase(bloques[numBloque].IdBloque, cursos[i].IdCurso, profesores[a].IdProfesor, aulas[b].IdAula, numBloque)
+                                exit()
+                                abc = abc + 1
+                                if(abc == 4):
+                                    exit()
+    print("ERROR CODE 4")
+    exit()

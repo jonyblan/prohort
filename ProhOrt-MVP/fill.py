@@ -1,5 +1,14 @@
-from index import cursos, profesores, aulas, bloques, anios, orientaciones, materias, profesorxMaterias
 import pyodbc
+
+cursos = []
+profesores = []
+aulas = []
+bloques = []
+resultados = []
+anios = []
+orientaciones = []
+materias = []
+profesorxMaterias = []
 
 def fillCursos():
     conn = pyodbc.connect('Driver={SQL Server};'
@@ -107,3 +116,5 @@ def fillEverything():
     fillMaterias()
     fillProfesorxMaterias()
     print("Todo fue llenado correctamente")
+
+fillEverything()
