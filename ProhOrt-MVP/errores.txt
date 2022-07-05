@@ -2,3 +2,7 @@
 2: Mas cantidad de cursos que de profesores
 3: Mas Cursos que bloques
 4: No hay suficientes soluciones
+5: Error en checkear disponibilidad
+6: alguna disponibilidad no es 0 ni 1
+7: no terminado de codear
+8: no se puede forzar el bloque deseado
