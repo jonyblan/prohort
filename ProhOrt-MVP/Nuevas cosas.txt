@@ -11,8 +11,8 @@ Crear una nueva tabla
             cursor = conn.cursor()
             cursor.execute('SELECT * FROM [tabla]')
             
-            for i in cursor:
-                [variable].append(i)
+            for diaSemana in cursor:
+                [variable].append(diaSemana)
     
     Paso 2: Llamar a la funcion y guardar en una variable su longitud
         fill[variable]()

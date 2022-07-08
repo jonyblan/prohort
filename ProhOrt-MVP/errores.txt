@@ -10,3 +10,4 @@
 10: La minima cantidad de bloques es mayor a la maxima
 11: No aclara si hay clases ese dia
 12: No hay posibilidad de un horario de entrada
+13: Interferencia entre max/minBloquesDia y horarioEntrada

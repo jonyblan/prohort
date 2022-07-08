@@ -7,45 +7,57 @@ def error(code):
 curso  = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
 profesor  = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
 aula  = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
-# el orden de los bloques es [[(numBloque, (id)curso, (id)profesor, (id)aula, (id)d, (id)e)][same]]. Cada uno es un bloque
+# el orden de los bloques es [[(numBloque, (id)curso, (id)profesor, (id)aula][same]]. Cada uno es un bloque
 
 # Variables que deberian estar ingresadas por el usuario
 maxBloquesDia = [5, 5, 5, 5, 5, -1, -1]
 minBloquesDia = [3, 3, 3, 3, 3, -1, -1]
 cantBloques = 20
 # horarioEntrada va del -2 a maxBloquesDia, hay 14 valores y representan el bloque de entrada minimo y maximo por dia. -1 indica que ese dia no hay clase, -2 que es cualquier horario (siempre que de resultados), y x>=0 los bloques
-horarioEntrada = [[2, 2], [0, 0], [0, 0], [0, 0], [0, 0], [-1, -1], [-1, -1]]
+horarioEntrada = [[1, 2], [2, 2], [0, 0], [1, 1], [0, 0], [-1, -1], [-1, -1]]
 
 # Variables que se llenan acorde al usuario
-# bloquesxDia va del -1 al 7 inclusive: -1 significa que no hay clase, 0 que todavia no fue asignado (no deberia quedar ninguno cuando finaliza la ejecucion, y del 1 al 7 los dias de la semana)
+# bloquesxDia va del -2 al 7 inclusive: -2 significa que no hay clase en todo el dia, -1 significa que en ese bloque no hay clase, 0 que todavia no fue asignado (no deberia quedar ninguno cuando finaliza la ejecucion), y del 1 al 7 la prioridad de llenar el bloque
 bloquesxDia = []
 bloques = []
 diasSemana = len(maxBloquesDia)
 
 # Aca empieza la logica
 maxBloques = 0
+maxCantBloques = 0
 for i in range(diasSemana):
     if maxBloquesDia[i] != -1:
-        maxBloques = maxBloques + maxBloquesDia[i]
-
-for i in range(maxBloques):
-    bloquesxDia.append(0)
-
+        if(maxBloquesDia[i] > maxCantBloques):
+            maxCantBloques = maxBloquesDia[i]
 
 for i in range(diasSemana):
-    if(maxBloquesDia[i] - minBloquesDia[i] < 0):
+    for a in range(maxCantBloques):
+        bloquesxDia.append(0)
+
+for diaSemana in range(diasSemana):
+    if(maxBloquesDia[diaSemana] - minBloquesDia[diaSemana] < 0):
         error(10)
     elif((maxBloquesDia == -1 and minBloquesDia != -1) or (maxBloquesDia != -1 and minBloquesDia == -1)):
         error(11)
-    elif(horarioEntrada[i][1] - horarioEntrada[i][0] < 0):
+    elif(horarioEntrada[diaSemana][1] - horarioEntrada[diaSemana][0] < 0):
         error(12)
-    elif(maxBloquesDia[i] - minBloquesDia[i]) < horarioEntrada[i][0]:
+    elif(maxBloquesDia[diaSemana] - minBloquesDia[diaSemana]) < horarioEntrada[diaSemana][0]:
         error(9)
-    elif(horarioEntrada[i][0] >= 0 and maxBloquesDia[i] >= 0):
-        for b in range(diasSemana):
-            if(maxBloquesDia[b] != -1):
-                for a in range(horarioEntrada[i][0]):
-                    bloquesxDia[b*5+a] = -1
+    elif(horarioEntrada[diaSemana][0] >= 0 and maxBloquesDia[diaSemana] >= 0):
+        if(maxBloquesDia[diaSemana] != -1):
+            for hora in range(horarioEntrada[diaSemana][0]):
+                bloquesxDia[diaSemana*5+hora] = -1
+        if(maxBloquesDia[diaSemana] - horarioEntrada[diaSemana][0] == minBloquesDia[diaSemana]):
+            for hora in range(horarioEntrada[diaSemana][0], maxCantBloques):
+                bloquesxDia[hora+5*diaSemana] = 7
+    elif(maxBloquesDia[diaSemana] == -1):
+        for bloque in range(maxCantBloques):
+            bloquesxDia[bloque+5*diaSemana] = -2
+    else:
+        error(13)
+
+
+
 
 print(bloquesxDia)
 exit()
