@@ -1,6 +1,7 @@
-Agregar prioridades a las materias
-Horario de entrada
+Agregar prioridades a las materias } 
+Horario de entrada ✓
+Minimo de bloques por dia
 Bloques libres
-Bloques juntos (tipo proyecto final)
-Bloques en conjunto(tipo ingles)
+Bloques juntos (tipo proyecto final) }
+Bloques en conjunto(tipo ingles) }
 Dividir un bloque en 2

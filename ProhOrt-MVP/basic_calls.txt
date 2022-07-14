@@ -44,3 +44,6 @@ Convertir de un array de binario a un Int
         if(aBien[i] == "1" or aBien[i] == 1):
             decimal = decimal + 1
     print(decimal)
+
+Acceder a un bloque especifico
+    diaSemana*maxBloquesDia+numBloque
