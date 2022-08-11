@@ -1,3 +1,13 @@
+import math
+from socket import NI_NUMERICSERV
+
+class Materia:
+    def __init__(self, _id, _nombre, _prioridad, _numBloques):
+        self.id = _id
+        self.nombre = _nombre
+        self.prioridad = _prioridad
+        self.numBloques = _numBloques
+
 def error(code):
     print("ERROR CODE " + str(code))
     exit()
@@ -9,9 +19,23 @@ def final(msg):
 
 # Variables que vendrian del programa
 # El orden de estos objetos es [[disponibilidadBloque1, disponibilidadBloque2, disponibilidadBloque3][same]]. Cada uno es un curso
-curso  = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
-profesor  = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
-aula  = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
+curso  = [[[1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1]], [[1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1]], [[1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1]]]
+profesor  = [[[1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1]], [[1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1]], [[1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1]]]
+aula  = [[[1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1]], [[1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1]], [[1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1]]]
+materia = []
+materia.append([])
+materia[0].append(Materia(0, "materia 1", 1, 8))
+materia[0].append(Materia(1, "materia 2", 1, 8))
+materia[0].append(Materia(2, "materia 3", 1, 8))
+materia.append([])
+materia[1].append(Materia(0, "materia 1", 1, 8))
+materia[1].append(Materia(1, "materia 2", 1, 8))
+materia[1].append(Materia(2, "materia 3", 1, 8))
+materia.append([])
+materia[2].append(Materia(0, "materia 1", 1, 8))
+materia[2].append(Materia(1, "materia 2", 1, 8))
+materia[2].append(Materia(2, "materia 3", 1, 8))
+
 # el orden de los bloques es [[(numBloque, (id)curso, (id)profesor, (id)aula][same]]. Cada uno es un bloque
 
 # Variables que deberian estar ingresadas por el usuario
@@ -22,11 +46,11 @@ faltanBloques = [[1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1
 cantBloquesReal = [20, 20, 20]  # falta automatizar por cantidad de cursos
 cantBloquesOcupados = [0, 0, 0]  # falta automatizar por cantidad de cursos
 # horarioEntrada va del -2 a maxBloquesDia, hay 14 valores y representan el bloque de entrada minimo y maximo por dia. -1 indica que ese dia no hay clase, -2 que es cualquier horario (siempre que de resultados), y x>=0 los bloquesAux
-horarioEntrada = [[[2, 2], [0, 0], [0, 0], [0, 0], [0, 0], [-1, -1], [-1, -1]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [-1, -1], [-1, -1]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [-1, -1], [-1, -1]]]  # falta automatizar por cantidad de cursos y dias
+horarioEntrada = [[[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [-1, -1], [-1, -1]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [-1, -1], [-1, -1]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [-1, -1], [-1, -1]]]  # falta automatizar por cantidad de cursos y dias
 
 # Variables que se llenan acorde al usuario
 # bloquesxDia va del -3 al 7 inclusive: -3 significa que ya fue asignado, -2 significa que no hay clase en todo el dia, -1 significa que en ese bloque no hay clase, 0 que todavia no fue asignado (no deberia quedar ninguno cuando finaliza la ejecucion), y del 1 al 7 la prioridad de llenar el bloque
-bloquesxDia = []
+bloquesxDia = [] #bloquesxDia[numCurso][numDiaDeSemana][numBloque]
 bloquesAux = []
 diasSemana = len(maxBloquesDia[0])
 cantCursos = len(curso)
@@ -34,21 +58,22 @@ cantCursos = len(curso)
 # Aca empieza la logica
 maxBloques = 0
 maxCantBloques = 0
-diasSemanaEscuela = 0
+diasSemanaEscuela = [0, 0, 0]
+cantBloques = [0, 0, 0]
 for numCurso in range(cantCursos):
     for i in range(diasSemana):
         if maxBloquesDia[numCurso][i] != -1:
-            diasSemanaEscuela = diasSemanaEscuela + 1
+            diasSemanaEscuela[numCurso] = diasSemanaEscuela[numCurso] + 1
             if(maxBloquesDia[numCurso][i] > maxCantBloques):
                 maxCantBloques = maxBloquesDia[numCurso][i]
-
-cantBloques = maxCantBloques*diasSemanaEscuela
+    cantBloques[numCurso] = maxCantBloques*diasSemanaEscuela[numCurso]
 
 for b in range(cantCursos):
     bloquesxDia.append([])
     for i in range(diasSemana):
+        bloquesxDia[b].append([])
         for a in range(maxCantBloques):
-            bloquesxDia[b].append(0)
+            bloquesxDia[b][i].append(0)
 
 for cursooo in range(cantCursos):
     for i in range(diasSemana):
@@ -69,31 +94,49 @@ for idCurso in range(cantCursos):
             #for numCurso in range(cantCursos):
                 if(maxBloquesDia[idCurso][diaSemana] != -1):
                     for hora in range(horarioEntrada[idCurso][diaSemana][0]):
-                        bloquesxDia[idCurso][diaSemana*5+hora] = -1
+                        bloquesxDia[idCurso][diaSemana][hora] = -1
                 if(maxBloquesDia[idCurso][diaSemana] - horarioEntrada[idCurso][diaSemana][0] == minBloquesDia[idCurso][diaSemana]):
                     for hora in range(horarioEntrada[idCurso][diaSemana][0], maxCantBloques):
-                        bloquesxDia[idCurso][hora+5*diaSemana] = 7
+                        bloquesxDia[idCurso][diaSemana][hora] = 7
         elif(maxBloquesDia[idCurso][diaSemana] == -1):
             #for numCurso in range(cantCursos):
                 for bloque in range(maxCantBloques):
-                    bloquesxDia[idCurso][bloque+5*diaSemana] = -2
+                    bloquesxDia[idCurso][diaSemana][bloque] = -2
         else:
             error(13)
 
-def checkearDisponibilidad(disponibilidad, numBloque, numArray, idLlamador):
-    if(disponibilidad[numBloque] == 1 or disponibilidad[numBloque] == "1"):
+def checkearDisponibilidad(disponibilidad, dia, numBloque, numArray, idLlamador):
+    if(disponibilidad[dia][numBloque] == 1 or disponibilidad[dia][numBloque] == "1"):
         return True
-    elif(disponibilidad[numBloque] == 0 or disponibilidad[numBloque] == "0"):
+    elif(disponibilidad[dia][numBloque] == 0 or disponibilidad[dia][numBloque] == "0"):
         return False
 
-def forzarBloque(numBloque, idCurso, idProfesor, idAula):
-    if(curso[idCurso][numBloque] == 0 or profesor[idProfesor][numBloque] == 0 or aula[idAula][numBloque] == 0):
+def cambiarDatos(dia, numBloque, idCurso, idProfesor, idAula, idMateria):
+    curso[idCurso][dia][numBloque] = 0
+    profesor[idProfesor][dia][numBloque] = 0
+    aula[idAula][dia][numBloque] = 0
+    materia[idCurso][idMateria].numBloques = materia[numCurso][idMateria].numBloques - 1
+    return 0
+
+def guardarBloque(dia, numBloque, idCurso, idProfesor, idAula, idMateria):
+    bloquesAux.append([dia, numBloque, idCurso, idProfesor, idAula, idMateria])
+
+def avisarConsola(idBloque):
+    if(idBloque == -1):
+        idBloque = len(bloquesAux)
+    print("Bloque completo: " + str(bloquesAux[idBloque]))
+
+def nuevoBloque(dia, numBloque, idCurso, idProfesor, idAula, idMateria, idBloque):
+    guardarBloque(dia, numBloque, idCurso, idProfesor, idAula, idMateria)
+    cambiarDatos(dia, numBloque, idCurso, idProfesor, idAula, idMateria)
+    avisarConsola(idBloque)
+
+
+def forzarBloque(dia, numBloque, idCurso, idProfesor, idAula, idMateria):
+    if(curso[idCurso][dia][numBloque] == 0 or profesor[idProfesor][dia][numBloque] == 0 or aula[idAula][dia][numBloque] == 0 or materia[idCurso][dia][idMateria].numBloques == 0):
         error(8)
     else:
-        bloquesAux.append([numBloque, idCurso, idProfesor, idAula])
-        curso[idCurso][numBloque] = 0
-        profesor[idProfesor][numBloque] = 0
-        aula[idAula][numBloque] = 0
+        nuevoBloque(dia, numBloque, idCurso, idProfesor, idAula, materia[numCurso[idMateria].id, -1])
 
 #bloquesOcupados = 0
 
@@ -110,55 +153,78 @@ def forzarBloque(numBloque, idCurso, idProfesor, idAula):
 #                            break
 #                else:
 
+def elegirMateria(numCurso):
+    for idMateria in range(len(materia[numCurso])):
+        if(materia[numCurso][idMateria].numBloques > 0):
+            return idMateria
+    return -1
 
-def llenarBloque(vuelta):
+def elegirCursoBloque(dia, numBloque):
+    for idCurso in range(len(curso)):
+        if(checkearDisponibilidad(curso[idCurso], dia, numBloque, idCurso, 0)):
+            return idCurso
+    return -1
+
+def elegirProfesor(dia, numBloque):
+    for idProfesor in range(len(profesor)):
+        if(checkearDisponibilidad(profesor[idProfesor], dia, numBloque, idProfesor, 1)):
+            return idProfesor
+    return -1
+
+def elegirAula(dia, numBloque):
+    for idAula in range(len(aula)):
+        if(checkearDisponibilidad(aula[idAula], dia, numBloque, idAula, 2)):
+            return idAula
+    return -1
+
+def elegirDatos(dia, numBloque):
+    idCurso = elegirCursoBloque(dia, numBloque)
+    idProfesor = elegirProfesor(dia, numBloque)
+    idAula = elegirAula(dia, numBloque)
+    if(idCurso == -1 or idProfesor == -1 or idAula == -1):
+        return -1
+    return([idCurso, idProfesor, idAula])
+
+def elegirCurso():
     for numCurso in range(cantCursos):
         if(cantBloquesOcupados[numCurso] < cantBloquesReal[numCurso]):
-            numBloque = 0
-            minBloques = 0
-            bloqueFalta = -1
-            diaFalta = -1
-            libre = True
-            for preNumBloque in range(cantBloques):
-                numBloque = preNumBloque
-                if(bloquesxDia[numCurso][numBloque] >= 0):
-                    idCurso = 0
-                    for idCurso in range(len(curso)):
-                        #if(bloquesxDia[numBloque] > 0):
-                            if(checkearDisponibilidad(curso[idCurso], numBloque, idCurso, 0)):
-                                idProfesor = 0
-                                for idProfesor in range(len(profesor)):
-                                    if(checkearDisponibilidad(profesor[idProfesor], numBloque, idProfesor, 1)):
-                                        idAula = 0
-                                        for idAula in range(len(aula)):
-                                            if(checkearDisponibilidad(aula[idAula], numBloque, idAula, 2)):
-                                                curso[idCurso][numBloque] = 0
-                                                profesor[idProfesor][numBloque] = 0
-                                                aula[idAula][numBloque] = 0
-                                                bloquesAux.append([numBloque, idCurso, idProfesor, idAula])
-                                                bloquesxDia[numCurso][numBloque] = -3
-                                                cantBloquesOcupados[numCurso] = cantBloquesOcupados[numCurso] + 1
-                                                bloquesDiaReal[numCurso][int(numBloque/maxCantBloques)] = bloquesDiaReal[numCurso][int(numBloque/maxCantBloques)] + 1
-                                                #bloquesOcupados = bloquesOcupados + 1
-                                                #if bloquesOcupados == cantBloques:
-                                                    #print("Se llenaron todos los bloques correctamente")
-                                                    #exit()
-                                                print("Bloque completo: " + str(bloquesAux[vuelta]))
-                                                return 1
-        else:
-            todosContados = True
-            for i in range(cantCursos):
-                if(cantBloquesOcupados[i] != 20):
-                    todosContados = False
-            if(todosContados == True):
-                for numCurso in range(cantCursos):
-                    for numBloque in range(len(bloquesxDia[numCurso])):
-                        if(bloquesxDia[numCurso][numBloque] == 0):
-                            bloquesxDia[numCurso][numBloque] = -4
+            return numCurso
+    return -1
+
+def llenarBloque(vuelta):
+    numCurso = elegirCurso()
+    for preNumBloque in range(cantBloques[numCurso]):
+        dia = preNumBloque%maxCantBloques
+        numBloque = math.trunc(preNumBloque/maxCantBloques)
+        idMateria = elegirMateria(numCurso)
+        if(numCurso != -1 and idMateria != -1):
+            numBloque = [0][0]
+            idProfesor = elegirProfesor(dia, numBloque)
+            idAula = elegirAula(dia, numBloque)
+            if(idAula != -1 and idProfesor != -1):
+                if(bloquesxDia[numCurso][dia][numBloque] >= 0):
+                    nuevoBloque(dia, numBloque, idCurso, idProfesor, idAula, idMateria, vuelta) # materia[numCurso[idMateria].id]
+                    bloquesxDia[numCurso][dia][numBloque] = -3
+                    cantBloquesOcupados[numCurso] = cantBloquesOcupados[numCurso] + 1
+                    bloquesDiaReal[numCurso][dia] = bloquesDiaReal[numCurso][dia] + 1
+                    return 1
+    if(numCurso == -1):
+        todosContados = True
+        for i in range(cantCursos):
+            if(cantBloquesOcupados[i] != 20):
+                todosContados = False
                 print(bloquesxDia)
-                print(bloquesDiaReal)
-                final("se llenaron todos los bloques")
+                error(4)
+        if(todosContados == True):
+            for numCurso in range(cantCursos):
+                for numBloque in range(len(bloquesxDia[numCurso])):
+                    if(bloquesxDia[numCurso][numBloque] == 0):
+                        bloquesxDia[numCurso][numBloque] = -4
+            print(bloquesxDia)
+            print(bloquesDiaReal)
+            final("se llenaron todos los bloques")
     print(bloquesxDia)
+    print("")
     error(4)
 
 def llenarBloques():

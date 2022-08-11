@@ -6,3 +6,4 @@ Bloques juntos (tipo proyecto final) }
 Bloques en conjunto(tipo ingles) }
 Dividir un bloque en 2
 Mostrar mejor en el print
+Mejorar el codigo principal
