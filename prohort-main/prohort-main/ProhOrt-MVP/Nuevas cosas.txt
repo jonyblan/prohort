@@ -1,0 +1,25 @@
+Crear una nueva tabla
+
+    Paso 1: Crear una funcion para recibir los valores y un array para guardarlos
+        variable = []
+        def fill[variable]():
+            conn = pyodbc.connect('Driver={SQL Server};'
+                                'Server=LAPTOP-7789D1F2\SQLEXPRESS;'
+                                'Database=ProhOrt-Mvp;'
+                                'Trusted_Connection=yes;')
+            
+            cursor = conn.cursor()
+            cursor.execute('SELECT * FROM [tabla]')
+            
+            for diaSemana in cursor:
+                [variable].append(diaSemana)
+    
+    Paso 2: Llamar a la funcion y guardar en una variable su longitud
+        fill[variable]()
+        cant[variable] = len([variable])
+    
+    Paso 3: Agregarla en las funciones comunes
+        ponerComoDefault()
+            cursor.execute('UPDATE [tabla] SET [columna] = [valor default]')
+
+    Paso 4: Agregar a las tablas necesarias
