@@ -1,12 +1,11 @@
 from asyncio.windows_events import NULL
 import pyodbc
-import fill
 import math
 
 # from services.db import DB
 
 #sql = DB('Driver={SQL Server};'
-#        'Server=LAPTOP-7789D1F2\SQLEXPRESS;'
+#        'Server=A-PHZ2-AMI-011;'
 #        'Database=ProhOrt-Mvp;'
 #        'Trusted_Connection=yes;')
 
@@ -27,7 +26,7 @@ profesorxMaterias = []
 
 def fillCursos():
     conn = pyodbc.connect('Driver={SQL Server};'
-                        'Server=LAPTOP-7789D1F2\SQLEXPRESS;'
+                        'Server=A-PHZ2-AMI-011;'
                         'Database=ProhOrt-Mvp;'
                         'Trusted_Connection=yes;')
     
@@ -40,7 +39,7 @@ def fillCursos():
 
 def fillAulas():
     conn = pyodbc.connect('Driver={SQL Server};'
-                        'Server=LAPTOP-7789D1F2\SQLEXPRESS;'
+                        'Server=A-PHZ2-AMI-011;'
                         'Database=ProhOrt-Mvp;'
                         'Trusted_Connection=yes;')
     
@@ -52,7 +51,7 @@ def fillAulas():
 
 def fillProfesores():
     conn = pyodbc.connect('Driver={SQL Server};'
-                        'Server=LAPTOP-7789D1F2\SQLEXPRESS;'
+                        'Server=A-PHZ2-AMI-011;'
                         'Database=ProhOrt-Mvp;'
                         'Trusted_Connection=yes;')
     
@@ -64,7 +63,7 @@ def fillProfesores():
 
 def fillBloques():
     conn = pyodbc.connect('Driver={SQL Server};'
-                        'Server=LAPTOP-7789D1F2\SQLEXPRESS;'
+                        'Server=A-PHZ2-AMI-011;'
                         'Database=ProhOrt-Mvp;'
                         'Trusted_Connection=yes;')
     
@@ -76,7 +75,7 @@ def fillBloques():
 
 def fillAnios():
             conn = pyodbc.connect('Driver={SQL Server};'
-                                'Server=LAPTOP-7789D1F2\SQLEXPRESS;'
+                                'Server=A-PHZ2-AMI-011;'
                                 'Database=ProhOrt-Mvp;'
                                 'Trusted_Connection=yes;')
             
@@ -88,7 +87,7 @@ def fillAnios():
 
 def fillOrientaciones():
             conn = pyodbc.connect('Driver={SQL Server};'
-                                'Server=LAPTOP-7789D1F2\SQLEXPRESS;'
+                                'Server=A-PHZ2-AMI-011;'
                                 'Database=ProhOrt-Mvp;'
                                 'Trusted_Connection=yes;')
             
@@ -100,7 +99,7 @@ def fillOrientaciones():
 
 def fillMaterias():
             conn = pyodbc.connect('Driver={SQL Server};'
-                                'Server=LAPTOP-7789D1F2\SQLEXPRESS;'
+                                'Server=A-PHZ2-AMI-011;'
                                 'Database=ProhOrt-Mvp;'
                                 'Trusted_Connection=yes;')
             
@@ -112,7 +111,7 @@ def fillMaterias():
 
 def fillProfesorxMaterias():
             conn = pyodbc.connect('Driver={SQL Server};'
-                                'Server=LAPTOP-7789D1F2\SQLEXPRESS;'
+                                'Server=A-PHZ2-AMI-011;'
                                 'Database=ProhOrt-Mvp;'
                                 'Trusted_Connection=yes;')
             
@@ -135,9 +134,38 @@ def fillEverything():
 
 fillEverything()
 
+class Curso:
+    def __init__(self, _id, _nombre, _bloquesOcupados, _disponibilidad, _idOrientacion, idAnio, _minBloquesxDia, _maxBloquesxDia, _minEntrada, _maxEntrada):
+        
+        self.id = _id
+        self.nombre = _nombre
+        self.bloquesOcupados = _bloquesOcupados
+        self.disponibilidad = _disponibilidad
+        self.idOrientacion = _idOrientacion
+        self.idAnio = idAnio
+        self.minBloquesxDia = _minBloquesxDia
+        self.maxBloquesxDia = _maxBloquesxDia
+        self.minEntrada = _minEntrada
+        self.maxEntrada = _maxEntrada
+
+class Aula:
+    def __init__(self, _id, _nombre, _disponibilidad):
+        self.id = _id
+        self.nombre = _nombre
+        self.disponibilidad = _disponibilidad
+
+class Profesor:
+    def __init__(self, _id, _nombre, _apellido, _disponibilidad, _minBloquesxDia, _maxBloquesxDia):
+        self.id = _id
+        self.nombre = _nombre
+        self.apellido = _apellido
+        self.disponibilidad = _disponibilidad
+        self.minBloquesxDia = _minBloquesxDia
+        self.maxBloquesxDia = _maxBloquesxDia
+
 def anotarClase(bloque, curso, profesor, aula, numBloque):
     conn = pyodbc.connect('Driver={SQL Server};'
-                        'Server=LAPTOP-7789D1F2\SQLEXPRESS;'
+                        'Server=A-PHZ2-AMI-011;'
                         'Database=ProhOrt-Mvp;'
                         'Trusted_Connection=yes;')
 
@@ -154,7 +182,7 @@ def anotarClase(bloque, curso, profesor, aula, numBloque):
 
 def ponerComoDefault():
     conn = pyodbc.connect('Driver={SQL Server};'
-                        'Server=LAPTOP-7789D1F2\SQLEXPRESS;'
+                        'Server=A-PHZ2-AMI-011;'
                         'Database=ProhOrt-Mvp;'
                         'Trusted_Connection=yes;')
     
@@ -171,7 +199,7 @@ def ponerComoDefault():
 
 def bajarTabla(tableName):
     conn = pyodbc.connect('Driver={SQL Server};'
-                        'Server=LAPTOP-7789D1F2\SQLEXPRESS;'
+                        'Server=A-PHZ2-AMI-011;'
                         'Database=ProhOrt-Mvp;'
                         'Trusted_Connection=yes;')
     
@@ -389,9 +417,50 @@ def llenarBloque(vuelta):
             error(4)
     verificacionFinal(todosContados)
 
+def stringToArray(string):
+    array = []
+    for id in range(len(string)):
+        array.append(int(string[id]))
+    return array
+
+def cambiarDisponibilidades(array, numArray, cant):
+    for numArray in range(cant):
+        if(len(array[numArray].Disponibilidad) != cant[numArray]):
+            array[numArray].Disponibilidad = array[numArray].Disponibilidad[::-1]
+            for i in range(cant[numArray] - len(array[numArray].Disponibilidad)):
+                array[numArray].Disponibilidad += '0'
+            array[numArray].Disponibilidad = array[numArray].Disponibilidad[::-1]
+        array[numArray].Disponibilidad = stringToArray(array[numArray].Disponibilidad)
+
+def cambiarDisponibilidades(array, cant):
+    for numArray in range(cant):
+        if(len(array[numArray].Disponibilidad) != cant[numArray]):
+            array[numArray].Disponibilidad = array[numArray].Disponibilidad[::-1]
+            for i in range(cant[numArray] - len(array[numArray].Disponibilidad)):
+                array[numArray].Disponibilidad += '0'
+            array[numArray].Disponibilidad = array[numArray].Disponibilidad[::-1]
+        array[numArray].Disponibilidad = stringToArray(array[numArray].Disponibilidad)
+    
+    for numCurso in range(cantCursos):
+        if(len(cursos[numCurso].Disponibilidad) != cantBloques[numCurso]):
+            cursos[numCurso].Disponibilidad = cursos[numCurso].Disponibilidad[::-1]
+            for i in range(cantBloques[numCurso] - len(cursos[numCurso].Disponibilidad)):
+                cursos[numCurso].Disponibilidad += '0'
+            cursos[numCurso].Disponibilidad = cursos[numCurso].Disponibilidad[::-1]
+        cursos[numCurso].Disponibilidad = stringToArray(cursos[numCurso].Disponibilidad)
+
+def pasarAObjetos():
+    cambiarDisponibilidades(cursos, cantCursos)
+    cambiarDisponibilidades(profesores, cantProfesores)
+    cambiarDisponibilidades(aulas, cantAulas)
+    
+    
 def preInicio():
     declaracionesIniciales()
     condicionalesIniciales()
+    pasarAObjetos()
+    print(cursos)
+    exit()
 
 def llenarBloques():
     preInicio()
