@@ -1,4 +1,0 @@
-- expandir max/minBloquesDia y horarioEntrada para abarcar a todos los cursos y hacerlo mas personalizable
-- crear cantBloquesReal
-- implementar un maximo de bloques por dia
-- implementar una minima cantidad de bloques por dia, como tambien maxima
