@@ -5,7 +5,7 @@ import math
 # from services.db import DB
 
 #sql = DB('Driver={SQL Server};'
-#        'Server=A-PHZ2-CIDI-050;'
+#        'Server=A-PHZ2-CIDI-003;'
 #        'Database=ProhOrt-Mvp;'
 #        'Trusted_Connection=yes;')
 
@@ -24,112 +24,46 @@ orientaciones = []
 materias = []
 profesorxMaterias = []
 
-def fillCursos():
-    conn = pyodbc.connect('Driver={SQL Server};'
-                        'Server=A-PHZ2-CIDI-050;'
-                        'Database=ProhOrt-Mvp;'
-                        'Trusted_Connection=yes;')
-    
-    cursor = conn.cursor()
-    cursor.execute('SELECT * FROM Curso')
-    #cursos = [curso for curso in cursor]
-    for curso in cursor:
-        cursos.append(curso)
 
-
-def fillAulas():
+def fillEverything():
     conn = pyodbc.connect('Driver={SQL Server};'
-                        'Server=A-PHZ2-CIDI-050;'
+                        'Server=A-PHZ2-CIDI-003;'
                         'Database=ProhOrt-Mvp;'
                         'Trusted_Connection=yes;')
     
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM Aula')
-    
     for aula in cursor:
         aulas.append(aula)
-
-def fillProfesores():
-    conn = pyodbc.connect('Driver={SQL Server};'
-                        'Server=A-PHZ2-CIDI-050;'
-                        'Database=ProhOrt-Mvp;'
-                        'Trusted_Connection=yes;')
-    
-    cursor = conn.cursor()
+        
     cursor.execute('SELECT * FROM Profesor')
-    
     for profesor in cursor:
         profesores.append(profesor)
-
-def fillBloques():
-    conn = pyodbc.connect('Driver={SQL Server};'
-                        'Server=A-PHZ2-CIDI-050;'
-                        'Database=ProhOrt-Mvp;'
-                        'Trusted_Connection=yes;')
     
-    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM Curso')
+    for curso in cursor:
+        cursos.append(curso)
+    
     cursor.execute('SELECT * FROM Bloque')
-    
     for bloque in cursor:
         bloques.append(bloque)
+    
+    cursor.execute('SELECT * FROM Anio')
+    for i in cursor:
+        anios.append(i)
+    
+    cursor.execute('SELECT * FROM Orientacion')
+    for i in cursor:
+        orientaciones.append(i)
+    
+    cursor.execute('SELECT * FROM Materia')
+    for i in cursor:
+        materias.append(i)
 
-def fillAnios():
-            conn = pyodbc.connect('Driver={SQL Server};'
-                                'Server=A-PHZ2-CIDI-050;'
-                                'Database=ProhOrt-Mvp;'
-                                'Trusted_Connection=yes;')
-            
-            cursor = conn.cursor()
-            cursor.execute('SELECT * FROM Anio')
-            
-            for i in cursor:
-                anios.append(i)
-
-def fillOrientaciones():
-            conn = pyodbc.connect('Driver={SQL Server};'
-                                'Server=A-PHZ2-CIDI-050;'
-                                'Database=ProhOrt-Mvp;'
-                                'Trusted_Connection=yes;')
-            
-            cursor = conn.cursor()
-            cursor.execute('SELECT * FROM Orientacion')
-            
-            for i in cursor:
-                orientaciones.append(i)
-
-def fillMaterias():
-            conn = pyodbc.connect('Driver={SQL Server};'
-                                'Server=A-PHZ2-CIDI-050;'
-                                'Database=ProhOrt-Mvp;'
-                                'Trusted_Connection=yes;')
-            
-            cursor = conn.cursor()
-            cursor.execute('SELECT * FROM Materia')
-            
-            for i in cursor:
-                materias.append(i)
-
-def fillProfesorxMaterias():
-            conn = pyodbc.connect('Driver={SQL Server};'
-                                'Server=A-PHZ2-CIDI-050;'
-                                'Database=ProhOrt-Mvp;'
-                                'Trusted_Connection=yes;')
-            
-            cursor = conn.cursor()
-            cursor.execute('SELECT * FROM ProfesorxMateria')
-            
-            for i in cursor:
-                profesorxMaterias.append(i)
-
-def fillEverything():
-    fillCursos()
-    fillAulas()
-    fillProfesores()
-    fillBloques()
-    fillAnios()
-    fillOrientaciones()
-    fillMaterias()
-    fillProfesorxMaterias()
+    cursor.execute('SELECT * FROM ProfesorxMateria')
+    for i in cursor:
+        profesorxMaterias.append(i)
+    
     print("Todo fue llenado correctamente")
 
 fillEverything()
@@ -163,62 +97,6 @@ class Profesor:
         self.minBloquesxDia = _minBloquesxDia
         self.maxBloquesxDia = _maxBloquesxDia
 
-def anotarClase(bloque, curso, profesor, aula, numBloque):
-    conn = pyodbc.connect('Driver={SQL Server};'
-                        'Server=A-PHZ2-CIDI-050;'
-                        'Database=ProhOrt-Mvp;'
-                        'Trusted_Connection=yes;')
-
-    cursor = conn.cursor()
-    
-    bloqueEnCodigo = str(10**(cantBloquesTotales - numBloque))
-    
-    cursor.execute('UPDATE Curso SET Disponibilidad = Disponibilidad - ' + bloqueEnCodigo + ' WHERE IdCurso = ' + str(curso))
-    cursor.execute('UPDATE Profesor SET Disponibilidad = Disponibilidad - ' + bloqueEnCodigo + ' WHERE IdProfesor = ' + str(profesor))
-    cursor.execute('UPDATE Aula SET Disponibilidad = Disponibilidad - ' + bloqueEnCodigo + ' WHERE IdAula = ' + str(aula))
-    cursor.execute('INSERT INTO Bloque (IdProfesor, IdAula, IdCurso) VALUES (' + str(profesor) + ', ' + str(aula) + ', ' + str(curso) + ')')
-    
-    conn.commit()
-
-def ponerComoDefault():
-    conn = pyodbc.connect('Driver={SQL Server};'
-                        'Server=A-PHZ2-CIDI-050;'
-                        'Database=ProhOrt-Mvp;'
-                        'Trusted_Connection=yes;')
-    
-    cursor = conn.cursor()
-    cursor.execute('UPDATE Curso SET Disponibilidad = 111')
-    cursor.execute('UPDATE Aula SET Disponibilidad = 111')
-    cursor.execute('UPDATE Profesor SET Disponibilidad = 111')
-    cursor.execute('UPDATE Anio SET CargaHoraria = 333')
-    #cursor.execute('UPDATE Orientacion SET [columna] = [valor default]')
-    #cursor.execute('UPDATE Materia SET [columna] = [valor default]')
-    #cursor.execute('DELETE FROM Bloque')
-
-    conn.commit()
-
-def bajarTabla(tableName):
-    conn = pyodbc.connect('Driver={SQL Server};'
-                        'Server=A-PHZ2-CIDI-050;'
-                        'Database=ProhOrt-Mvp;'
-                        'Trusted_Connection=yes;')
-    
-    cursor = conn.cursor()
-    cursor.execute('SELECT * FROM ' + tableName)
-    
-    for i in cursor:
-        tableName.append(i)
-
-# Declaraciones Basicas
-cantCursos = len(cursos) #3
-cantAulas = len(aulas) #5
-cantProfesores = len(profesores) #5
-cantBloques = len(bloques) #9 (3 por curso)
-cantAnio = len(anios)
-cantOrientacion = len(orientaciones)
-cantMateria = len(materias)
-cantProfesorxMateria = len(profesorxMaterias)
-
 class Materia:
     def __init__(self, _id, _nombre, _prioridad, _numBloques):
         self.id = _id
@@ -234,6 +112,69 @@ class DatosBloque:
         self.idProfesor = _idProfesor
         self.idAula = _idAula
         self.idMateria = _idMateria
+
+def anotarClase(bloque, curso, profesor, aula, numBloque):
+    conn = pyodbc.connect('Driver={SQL Server};'
+                        'Server=A-PHZ2-CIDI-003;'
+                        'Database=ProhOrt-Mvp;'
+                        'Trusted_Connection=yes;')
+
+    cursor = conn.cursor()
+    
+    bloqueEnCodigo = str(10**(cantBloquesTotales - numBloque))
+    
+    cursor.execute('UPDATE Curso SET Disponibilidad = Disponibilidad - ' + bloqueEnCodigo + ' WHERE IdCurso = ' + str(curso))
+    cursor.execute('UPDATE Profesor SET Disponibilidad = Disponibilidad - ' + bloqueEnCodigo + ' WHERE IdProfesor = ' + str(profesor))
+    cursor.execute('UPDATE Aula SET Disponibilidad = Disponibilidad - ' + bloqueEnCodigo + ' WHERE IdAula = ' + str(aula))
+    cursor.execute('INSERT INTO Bloque (IdProfesor, IdAula, IdCurso) VALUES (' + str(profesor) + ', ' + str(aula) + ', ' + str(curso) + ')')
+    
+    conn.commit()
+
+def ponerComoDefault(devolver, exacto):
+    if(exacto == False):
+        if(devolver != 0):
+            error(14)
+    devolver = str(devolver)
+    
+    conn = pyodbc.connect('Driver={SQL Server};'
+                        'Server=A-PHZ2-CIDI-003;'
+                        'Database=ProhOrt-Mvp;'
+                        'Trusted_Connection=yes;')
+    
+    cursor = conn.cursor()
+    cursor.execute('UPDATE Curso SET Disponibilidad = ' + devolver)
+    cursor.execute('UPDATE Aula SET Disponibilidad = ' + devolver)
+    cursor.execute('UPDATE Profesor SET Disponibilidad = ' + devolver)
+    cursor.execute('UPDATE Anio SET CargaHoraria = ' + devolver)
+    #cursor.execute('UPDATE Orientacion SET [columna] = [valor default]')
+    #cursor.execute('UPDATE Materia SET [columna] = [valor default]')
+    #cursor.execute('DELETE FROM Bloque')
+
+    conn.commit()
+
+def bajarTabla(tableName):
+    conn = pyodbc.connect('Driver={SQL Server};'
+                        'Server=A-PHZ2-CIDI-003;'
+                        'Database=ProhOrt-Mvp;'
+                        'Trusted_Connection=yes;')
+    
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM ' + tableName)
+    
+    for i in cursor:
+        tableName.append(i)
+
+# Declaraciones Basicas
+cantCursos = len(cursos) #3
+cantAulas = len(aulas) #5
+cantProfesores = len(profesores) #5
+cantBloques = len(bloques) #9 (3 por curso)
+cantAnios = len(anios)
+cantOrientaciones = len(orientaciones)
+cantMaterias = len(materias)
+cantProfesorxMaterias = len(profesorxMaterias)
+
+
 
 def error(code):
     print("ERROR CODE " + str(code))
@@ -326,10 +267,10 @@ def checkearDisponibilidad(disponibilidad, dia, numBloque, numArray, idLlamador)
         return False
 
 def cambiarDatos(dbq):
-    cursos[dbq.numCurso][dbq.dia][dbq.numBloque] = 0
-    profesores[dbq.idProfesor][dbq.dia][dbq.numBloque] = 0
-    aulas[dbq.idAula][dbq.dia][dbq.numBloque] = 0
-    materias[dbq.numCurso][dbq.idMateria].numBloques = materias[dbq.numCurso][dbq.idMateria].numBloques - 1
+    cursos[dbq.numCurso].Disponibilidad[dbq.dia][dbq.numBloque] = 0
+    profesores[dbq.idProfesor].Disponibilidad[dbq.dia][dbq.numBloque] = 0
+    aulas[dbq.idAula].Disponibilidad[dbq.dia][dbq.numBloque] = 0
+    materias[dbq.idMateria].NumBloques[dbq.numCurso] = materias[dbq.idMateria].NumBloques[dbq.numCurso] - 1
     bloquesxDia[dbq.numCurso][dbq.dia][dbq.numBloque] = -3
     cantBloquesOcupados[dbq.numCurso] = cantBloquesOcupados[dbq.numCurso] + 1
     bloquesDiaReal[dbq.numCurso][dbq.dia] = bloquesDiaReal[dbq.numCurso][dbq.dia] + 1
@@ -351,30 +292,30 @@ def forzarBloque(dia, numBloque, numCurso, idProfesor, idAula, idMateria):
     if(cursos[numCurso][dia][numBloque] == 0 or profesores[idProfesor][dia][numBloque] == 0 or aulas[idAula][dia][numBloque] == 0 or materias[numCurso][dia][idMateria].numBloques == 0):
         error(8)
     else:
-        datosBloque = DatosBloque(dia, numBloque, numCurso, idProfesor, idAula, materias[numCurso][idMateria].id)
+        datosBloque = DatosBloque(dia, numBloque, numCurso, idProfesor, idAula, materias[idMateria])
         nuevoBloque(datosBloque, -1)
 
 def elegirMateria(numCurso):
     for idMateria in range(len(materias[numCurso])):
-        if(materias[numCurso][idMateria].numBloques > 0):
+        if(materias[idMateria].NumBloques[numCurso] > 0):
             return idMateria
     return -1
 
 def elegirCursoBloque(dia, numBloque):
     for idCurso in range(len(cursos)):
-        if(checkearDisponibilidad(cursos[idCurso], dia, numBloque, idCurso, 0)):
+        if(checkearDisponibilidad(cursos[idCurso].Disponibilidad, dia, numBloque, idCurso, 0)):
             return idCurso
     return -1
 
 def elegirProfesor(dia, numBloque):
     for idProfesor in range(len(profesores)):
-        if(checkearDisponibilidad(profesores[idProfesor], dia, numBloque, idProfesor, 1)):
+        if(checkearDisponibilidad(profesores[idProfesor].Disponibilidad, dia, numBloque, idProfesor, 1)):
             return idProfesor
     return -1
 
 def elegirAula(dia, numBloque):
     for idAula in range(len(aulas)):
-        if(checkearDisponibilidad(aulas[idAula], dia, numBloque, idAula, 2)):
+        if(checkearDisponibilidad(aulas[idAula].Disponibilidad, dia, numBloque, idAula, 2)):
             return idAula
     return -1
 
@@ -428,43 +369,68 @@ def stringToArray(string):
         array.append(int(string[id]))
     return array
 
-def cambiarDisponibilidades(array, numArray, cant):
-    for numArray in range(cant):
-        if(len(array[numArray].Disponibilidad) != cant[numArray]):
-            array[numArray].Disponibilidad = array[numArray].Disponibilidad[::-1]
-            for i in range(cant[numArray] - len(array[numArray].Disponibilidad)):
-                array[numArray].Disponibilidad += '0'
-            array[numArray].Disponibilidad = array[numArray].Disponibilidad[::-1]
-        array[numArray].Disponibilidad = stringToArray(array[numArray].Disponibilidad)
-
 def cambiarDisponibilidadCurso(array, cant, cantBloques):
+    algoMas = []
     for numArray in range(cant):
         if(len(array[numArray].Disponibilidad) != cantBloques[numArray]):
             array[numArray].Disponibilidad = array[numArray].Disponibilidad[::-1]
             for i in range(cantBloquesMax - len(array[numArray].Disponibilidad)):
                 array[numArray].Disponibilidad += '0'
             array[numArray].Disponibilidad = array[numArray].Disponibilidad[::-1]
-            array[numArray].Disponibilidad = stringToArray(array[numArray].Disponibilidad)
-        
+        array[numArray].Disponibilidad = stringToArray(array[numArray].Disponibilidad)
+        algoMas = []
+        for i in range(int(len(array[numArray].Disponibilidad)/maxCantBloques)):
+            aux = []
+            for a in range(maxCantBloques):
+                aux.append(array[numArray].Disponibilidad[i*maxCantBloques+a])
+            algoMas.append(aux)
+        array[numArray].Disponibilidad = algoMas
 
 def cambiarDisponibilidades(array, cant):
+    algoMas = []
     for numArray in range(cant):
         if(len(array[numArray].Disponibilidad) != cantBloquesMax):
             array[numArray].Disponibilidad = array[numArray].Disponibilidad[::-1]
             for i in range(cantBloquesMax - len(array[numArray].Disponibilidad)):
                 array[numArray].Disponibilidad += '0'
             array[numArray].Disponibilidad = array[numArray].Disponibilidad[::-1]
-            array[numArray].Disponibilidad = stringToArray(array[numArray].Disponibilidad)
+        array[numArray].Disponibilidad = stringToArray(array[numArray].Disponibilidad)
+        algoMas = []
+        for i in range(int(len(array[numArray].Disponibilidad)/maxCantBloques)):
+            aux = []
+            for a in range(maxCantBloques):
+                aux.append(array[numArray].Disponibilidad[i*maxCantBloques+a])
+            algoMas.append(aux)
+        array[numArray].Disponibilidad = algoMas
+
+def ajustarMaterias():
+    for numMateria in range(cantMaterias):
+        if(len(materias[numMateria].NumBloques) != cantCursos):
+            materias[numMateria].NumBloques = materias[numMateria].NumBloques[::-1]
+            for i in range(cantCursos - len(materias[numMateria].NumBloques)):
+                materias[numMateria].NumBloques += '0'
+            materias[numMateria].NumBloques = materias[numMateria].NumBloques[::-1]
+            materias[numMateria].NumBloques = stringToArray(materias[numMateria].NumBloques)
+        else:
+            materias[numMateria].NumBloques = stringToArray(materias[numMateria].NumBloques)
+
+
 
 def pasarAObjetos():
     cambiarDisponibilidadCurso(cursos, cantCursos, cantBloques)
     cambiarDisponibilidades(profesores, cantProfesores)
     cambiarDisponibilidades(aulas, cantAulas)
-    
+
+def verificacionesManuales():
+    return -1
+
 def preInicio():
     declaracionesIniciales()
     condicionalesIniciales()
     pasarAObjetos()
+    print(cursos[0])
+    ajustarMaterias()
+    verificacionesManuales()
 
 def llenarBloques():
     preInicio()
@@ -478,9 +444,9 @@ def llenarBloques():
             llenarBloque(i)
             i = i + 1
     print("Llego al final. Continuar para borrar datos")
-    print("")
+    exit()
 
-llenarBloques()
+#llenarBloques()
 
 
-#ponerComoDefault() # Devuelve los valores de las disponibilidades al default
+ponerComoDefault(0, False) # Devuelve los valores de las disponibilidades al default, (0 o 1 dependiendo de lo enviado)
