@@ -2,7 +2,7 @@ import pyodbc
 
 def fillEverything(aulas, profesores, cursos, bloques, dias, anios, orientaciones, materias, profesorxMaterias):
     conn = pyodbc.connect('Driver={SQL Server};'
-                        'Server=A-PHZ2-CIDI-052;'
+                        'Server=A-PHZ2-CIDI-050;'
                         'Database=ProhOrt-Mvp;'
                         'Trusted_Connection=yes;')
     
@@ -43,5 +43,3 @@ def fillEverything(aulas, profesores, cursos, bloques, dias, anios, orientacione
     cursor.execute('SELECT * FROM ProfesorxMateria')
     for i in cursor:
         profesorxMaterias.append(i)
-    
-    print("Todo fue llenado correctamente")

@@ -2,11 +2,14 @@ from asyncio.windows_events import NULL
 import pyodbc
 import math
 import bajadaBDD
+import finales
+import cambiosBDD
+import condicionales
 
 # from services.db import DB
 
 #sql = DB('Driver={SQL Server};'
-#        'Server=A-PHZ2-CIDI-052;'
+#        'Server=A-PHZ2-CIDI-050;'
 #        'Database=ProhOrt-Mvp;'
 #        'Trusted_Connection=yes;')
 
@@ -69,62 +72,9 @@ class DatosBloque:
         self.idAula = _idAula
         self.idMateria = _idMateria
 
-def anotarBloque(dbq):
-    conn = pyodbc.connect('Driver={SQL Server};'
-                        'Server=A-PHZ2-CIDI-052;'
-                        'Database=ProhOrt-Mvp;'
-                        'Trusted_Connection=yes;')
-
-    cursor = conn.cursor()
-    
-    cursor.execute('INSERT INTO Bloque (IdDia, NumBloque, IdCurso, IdProfesor, IdAula, IdMateria) VALUES ('  + str(dbq.dia) + ', ' + str(dbq.numBloque) + ', ' + str(cursos[dbq.numCurso].IdCurso) + ', ' + str(profesores[dbq.idProfesor].IdProfesor) + ', ' + str(aulas[dbq.idAula].IdAula) + ', ' + str(materias[dbq.idMateria].IdMateria) + ')')
-
-    conn.commit()
-
-def vaciarBloques(terminar):
-    conn = pyodbc.connect('Driver={SQL Server};'
-                        'Server=A-PHZ2-CIDI-052;'
-                        'Database=ProhOrt-Mvp;'
-                        'Trusted_Connection=yes;')
-    
-    cursor = conn.cursor()
-    
-    cursor.execute('DELETE FROM Bloque')
-    
-    conn.commit()
-    print("Bloques vaciados correctamente")
-    
-    if terminar: exit()
-
-def ponerComoDefault(devolver, exacto, terminar):
-    if(exacto == False):
-        if(devolver != 0):
-            error(14)
-    devolver = str(devolver)
-    
-    conn = pyodbc.connect('Driver={SQL Server};'
-                        'Server=A-PHZ2-CIDI-052;'
-                        'Database=ProhOrt-Mvp;'
-                        'Trusted_Connection=yes;')
-    
-    cursor = conn.cursor()
-    cursor.execute('UPDATE Curso SET Disponibilidad = ' + devolver)
-    cursor.execute('UPDATE Aula SET Disponibilidad = ' + devolver)
-    cursor.execute('UPDATE Profesor SET Disponibilidad = ' + devolver)
-    cursor.execute('DELETE FROM Bloque')
-    #cursor.execute('UPDATE Anio SET CargaHoraria = ' + devolver)
-    #cursor.execute('UPDATE Orientacion SET [columna] = [valor default]')
-    #cursor.execute('UPDATE Materia SET [columna] = [valor default]')
-    #cursor.execute('DELETE FROM Bloque')
-
-    conn.commit()
-    print("Todo se puso como default correctamente")
-    
-    if terminar: exit()
-
 def bajarTabla(tableName):
     conn = pyodbc.connect('Driver={SQL Server};'
-                        'Server=A-PHZ2-CIDI-052;'
+                        'Server=A-PHZ2-CIDI-050;'
                         'Database=ProhOrt-Mvp;'
                         'Trusted_Connection=yes;')
     
@@ -135,10 +85,6 @@ def bajarTabla(tableName):
         tableName.append(i)
 
 # Declaraciones Basicas
-
-def error(code):
-    print("ERROR CODE " + str(code))
-    exit()
 
 def final(msg):
     print(msg)
@@ -243,25 +189,10 @@ def declaracionesIniciales():
                 if (dias[dia].IdCurso == idCursos[numCurso] and dias[dia].DiaSemana == diaSemana+1):
                     horarioEntrada[numCurso][diaSemana].append(dias[dia].EntradaMin)
                     horarioEntrada[numCurso][diaSemana].append(dias[dia].EntradaMax)
-
-def condicionalesIniciales():
+    
     for idCurso in range(cantCursos):
-        if(cantAulas < cantCursos):
-            error(1)
-        if(cantProfesores < cantCursos):
-            error(2)
-        if(cantBloques[idCurso] < cantCursos):
-            error(3)
         for diaSemana in range(diasSemana):
-            if(maxBloquesDia[idCurso][diaSemana] - minBloquesDia[idCurso][diaSemana] < 0):
-                error(10)
-            elif((maxBloquesDia[idCurso] == -1 and minBloquesDia[idCurso] != -1) or (maxBloquesDia[idCurso] != -1 and minBloquesDia[idCurso] == -1)):
-                error(11)
-            elif(horarioEntrada[idCurso][diaSemana][1] - horarioEntrada[idCurso][diaSemana][0] < 0):
-                error(12)
-            elif(maxBloquesDia[idCurso][diaSemana] - minBloquesDia[idCurso][diaSemana]) < horarioEntrada[idCurso][diaSemana][0]:
-                error(9)
-            elif(horarioEntrada[idCurso][diaSemana][0] >= 0 and maxBloquesDia[idCurso][diaSemana] >= 0):
+            if(horarioEntrada[idCurso][diaSemana][0] >= 0 and maxBloquesDia[idCurso][diaSemana] >= 0):
                 #for numCurso in range(cantCursos):
                     if(maxBloquesDia[idCurso][diaSemana] != -1):
                         for hora in range(horarioEntrada[idCurso][diaSemana][0]):
@@ -274,13 +205,28 @@ def condicionalesIniciales():
                     for bloque in range(maxCantBloques):
                         bloquesxDia[idCurso][diaSemana][bloque] = -2
             else:
-                error(13)
+                finales.finalIncorrecto(13)    
 
 def checkearDisponibilidad(disponibilidad, dia, numBloque, numArray, idLlamador):
     if(disponibilidad[dia][numBloque] == 1 or disponibilidad[dia][numBloque] == "1"):
         return True
     elif(disponibilidad[dia][numBloque] == 0 or disponibilidad[dia][numBloque] == "0"):
         return False
+
+
+
+def elegirCursoBloque(dia, numBloque, cantCursos, cursos):
+    for idCurso in range(cantCursos):
+        if(checkearDisponibilidad(cursos[idCurso].Disponibilidad, dia, numBloque, idCurso, 0)):
+            return idCurso
+    return -1
+
+
+def elegirCurso():
+    for numCurso in range(cantCursos):
+        if(cantBloquesOcupados[numCurso] < cantBloquesReal[numCurso]):
+            return numCurso
+    return -1
 
 def cambiarDatos(dbq):
     cursos[dbq.numCurso].Disponibilidad[dbq.dia][dbq.numBloque] = 0
@@ -293,7 +239,7 @@ def cambiarDatos(dbq):
 
 def guardarBloque(dbq):
     bloquesAux.append([dbq.dia, dbq.numBloque, dbq.numCurso, dbq.idProfesor, dbq.idAula, dbq.idMateria])
-    anotarBloque(dbq)
+    cambiosBDD.anotarBloque(dbq, cursos, profesores, aulas, materias)
 
 def avisarConsola(idBloque):
     if(idBloque == -1):
@@ -307,40 +253,12 @@ def nuevoBloque(datosBloque, idBloque):
 
 def forzarBloque(dia, numBloque, numCurso, idProfesor, idAula, idMateria):
     if(cursos[numCurso][dia][numBloque] == 0 or profesores[idProfesor][dia][numBloque] == 0 or aulas[idAula][dia][numBloque] == 0 or materias[numCurso][dia][idMateria].numBloques == 0):
-        error(8)
+        finales.finalIncorrecto(8)
     else:
         datosBloque = DatosBloque(dia, numBloque, numCurso, idProfesor, idAula, materias[idMateria])
         nuevoBloque(datosBloque, -1)
 
-def elegirMateria(numCurso):
-    for idMateria in range(cantMaterias):
-        if(materias[idMateria].NumBloques[numCurso] > 0):
-            return idMateria
-    return -1
 
-def elegirCursoBloque(dia, numBloque):
-    for idCurso in range(cantCursos):
-        if(checkearDisponibilidad(cursos[idCurso].Disponibilidad, dia, numBloque, idCurso, 0)):
-            return idCurso
-    return -1
-
-def elegirProfesor(dia, numBloque):
-    for idProfesor in range(cantProfesores):
-        if(checkearDisponibilidad(profesores[idProfesor].Disponibilidad, dia, numBloque, idProfesor, 1)):
-            return idProfesor
-    return -1
-
-def elegirAula(dia, numBloque):
-    for idAula in range(cantAulas):
-        if(checkearDisponibilidad(aulas[idAula].Disponibilidad, dia, numBloque, idAula, 2)):
-            return idAula
-    return -1
-
-def elegirCurso():
-    for numCurso in range(cantCursos):
-        if(cantBloquesOcupados[numCurso] < cantBloquesReal[numCurso]):
-            return numCurso
-    return -1
 
 def llenarDatosBloque(numCurso, dia, numBloque):
     idMateria = elegirMateria(numCurso);
@@ -356,13 +274,13 @@ def verificacionFinal(todosContados):
         for numCurso in range(cantCursos):
             for numBloque in range(len(bloquesxDia[numCurso])):
                 if(bloquesxDia[numCurso][numBloque] == 0):
-                    bloquesxDia[numCurso][numBloque] = -4
+                    bloquesxDia[numCurso][numBloque] = -4 #ARREGLAR
         print(bloquesxDia)
         print(bloquesDiaReal)
-        final("se llenaron todos los bloques")
+        finales.finalCorrecto("Se llenaron todos los bloques")
     print(bloquesxDia)
     print("")
-    error(4)
+    finales.finalIncorrecto(4)
 
 def stringToArray(string):
     array = []
@@ -437,22 +355,24 @@ def llenarBloque(vuelta):
             todosContados = False
             print(bloquesxDia)
             print(materias)
-            error(4)
+            finales.finalIncorrecto(4)
     if(todosContados == True):
         verificacionFinal(todosContados)
 
 def preVerificacionesManuales():
     return -1
+    exit()
 
 def postVerificacionesManuales():
     return -1
+    exit()
 
 def preInicio():
     preVerificacionesManuales()
-    vaciarBloques(False)
+    cambiosBDD.vaciarBloques(False)
     bajadaBDD.fillEverything(aulas, profesores, cursos, bloques, dias, anios, orientaciones, materias, profesorxMaterias)
     declaracionesIniciales()
-    condicionalesIniciales()
+    condicionales.condicionalesIniciales(cantCursos, cantAulas, cantProfesores, cantBloques, diasSemana, maxBloquesDia, minBloquesDia, horarioEntrada)
     pasarAObjetos()
     ajustarMaterias()
     postVerificacionesManuales()
@@ -468,10 +388,10 @@ def llenarBloques():
         while True:
             llenarBloque(i)
             i = i + 1
-    print("Llego al final. Continuar para borrar datos")
+    finales.finalCorrecto("Llego al final. Continuar para borrar datos")
     exit()
 
 llenarBloques()
 
-vaciarBloques(True)
-ponerComoDefault(1111111111111111111111111, True, True) # Devuelve los valores de las disponibilidades al default, (0 o 1 dependiendo de lo enviado)
+cambiosBDD.vaciarBloques(False)
+cambiosBDD.ponerComoDefault(1111111111111111111111111, True, True) # Devuelve los valores de las disponibilidades al default, (0 o 1 dependiendo de lo enviado)
