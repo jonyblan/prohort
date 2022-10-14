@@ -1,0 +1,2 @@
+def algo():
+    return "funciona"
